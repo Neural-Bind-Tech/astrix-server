@@ -1,0 +1,39 @@
+name: Clone Repository on EC2
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  clone:
+    name: Clone or Pull Repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Clone or pull repository
+        run: |
+          ssh -o StrictHostKeyChecking=no "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" << 'ENDSSH'
+            set -euo pipefail
+
+            REPO_DIR='${{ secrets.REPO }}'
+            DEPLOY_PATH="$HOME/$REPO_DIR"
+
+            if [ -d "$DEPLOY_PATH/.git" ]; then
+              echo "Repository exists, pulling latest changes..."
+              cd "$DEPLOY_PATH"
+              git pull
+            else
+              echo "Cloning repository..."
+              git clone '${{ secrets.REPO_URL }}' "$DEPLOY_PATH"
+            fi
+
+            echo "Repository ready at: $DEPLOY_PATH"
+          ENDSSH

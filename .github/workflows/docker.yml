@@ -1,0 +1,48 @@
+name: Deploy Docker Compose to EC2
+
+on:
+  workflow_run:
+    workflows:
+      - Clone Repository on EC2
+    types:
+      - completed
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build and Deploy Backend
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Create .env from .env.example
+        run: |
+          ssh -o StrictHostKeyChecking=no "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" << 'ENDSSH'
+            set -euo pipefail
+
+            REPO_DIR='${{ secrets.REPO }}'
+            DEPLOY_PATH="$HOME/$REPO_DIR"
+
+            cp "$DEPLOY_PATH/server/.env.example" "$DEPLOY_PATH/server/.env"
+          ENDSSH
+
+      - name: Deploy backend with Docker Compose
+        run: |
+          ssh -o StrictHostKeyChecking=no "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" << 'ENDSSH'
+            set -euo pipefail
+
+            REPO_DIR='${{ secrets.REPO }}'
+            DEPLOY_PATH="$HOME/$REPO_DIR"
+            cd "$DEPLOY_PATH"
+
+            docker compose -f server/dockercompose.yml up -d --build --remove-orphans
+            docker compose -f server/dockercompose.yml ps
+          ENDSSH

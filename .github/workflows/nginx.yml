@@ -1,0 +1,48 @@
+name: Configure Nginx on EC2
+
+on:
+  workflow_run:
+    workflows:
+      - Deploy Docker Compose to EC2
+    types:
+      - completed
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  configure-nginx:
+    name: Configure Nginx
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Apply Nginx Configuration
+        run: |
+          ssh -o StrictHostKeyChecking=no "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" << 'ENDSSH'
+            set -euo pipefail
+
+            REPO_DIR='${{ secrets.REPO }}'
+            NGINX_TEMPLATE="$HOME/$REPO_DIR/server/nginx/app.conf"
+
+            if [ ! -f "$NGINX_TEMPLATE" ]; then
+              echo "Nginx template not found: $NGINX_TEMPLATE"
+              exit 1
+            fi
+
+            sudo cp "$NGINX_TEMPLATE" /etc/nginx/sites-available/app
+            sudo ln -sf /etc/nginx/sites-available/app /etc/nginx/sites-enabled/app
+            sudo rm -f /etc/nginx/sites-enabled/default
+
+            sudo nginx -t
+            sudo systemctl restart nginx
+            sudo systemctl enable nginx
+
+            echo "Nginx configured for backend.astrixeducation.com"
+          ENDSSH

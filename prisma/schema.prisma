@@ -1,0 +1,346 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =========================
+// ENUMS
+// =========================
+
+enum CountryOfInterest {
+  USA
+  CHINA
+  MALAYSIA
+  SOUTH_KOREA
+  UK
+  CANADA
+  AUSTRALIA
+  OTHER
+}
+
+enum BudgetRange {
+  UNDER_10000
+  BETWEEN_10000_20000
+  BETWEEN_20000_40000
+  ABOVE_40000
+}
+
+enum PreferredIntake {
+  SPRING_2025
+  FALL_2025
+  SPRING_2026
+  FALL_2026
+}
+
+enum ApplicationStatus {
+  NEW
+  CONTACTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum BlogCategory {
+  STUDY_ABROAD_GUIDES
+  VISA_TIPS
+  SCHOLARSHIP_UPDATES
+  COUNTRY_COMPARISON
+  ADMISSION_ADVICE
+  STUDENT_LIFE
+  DOCUMENT_PREPARATION
+  SUCCESS_STORIES
+  CAREER_GUIDANCE
+}
+
+enum InquiryStatus {
+  NEW
+  REPLIED
+  CLOSED
+}
+
+enum UniversityCountry {
+  USA
+  CHINA
+  MALAYSIA
+  SOUTH_KOREA
+  THAILAND
+  UK
+  CANADA
+  AUSTRALIA
+  OTHER
+}
+
+enum VisaCountry {
+  USA
+  CHINA
+  MALAYSIA
+  THAILAND
+  UK
+  CANADA
+  AUSTRALIA
+  SCHENGEN
+  OTHER
+}
+
+enum VisaPurpose {
+  STUDY
+  TOURIST
+  BUSINESS
+  FAMILY_VISIT
+  OTHER
+}
+
+enum VisaAppointmentStatus {
+  NEW
+  CONTACTED
+  SCHEDULED
+  COMPLETED
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+
+// =========================
+// MODELS
+// =========================
+
+model Application {
+  id                 String              @id @default(uuid())
+  fullName           String
+  email              String
+  phone              String
+  countryOfInterest  CountryOfInterest
+  programPreference  String?
+  academicBackground String?
+  budgetRange        BudgetRange?
+  preferredIntake    PreferredIntake?
+  message            String?
+  documentsUrl       String?
+  status             ApplicationStatus   @default(NEW)
+
+  createdById        String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@index([email])
+  @@index([phone])
+  @@index([countryOfInterest])
+  @@index([status])
+  @@index([fullName])
+}
+
+model BlogPost {
+  id            String       @id @default(uuid())
+  title         String
+  slug          String?      @unique
+  excerpt       String?
+  content       String
+  category      BlogCategory
+  featuredImage String?
+  author        String?
+  isFeatured    Boolean      @default(false)
+  published     Boolean      @default(false)
+
+  createdById   String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([title])
+  @@index([category])
+  @@index([published])
+  @@index([isFeatured])
+  @@index([author])
+}
+
+model Event {
+  id               String    @id @default(uuid())
+  title            String
+  description      String?
+  date             DateTime
+  time             String?
+  location         String?
+  isOnline         Boolean   @default(false)
+  imageUrl         String?
+  registrationLink String?
+  isPast           Boolean   @default(false)
+
+  createdById      String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([title])
+  @@index([date])
+  @@index([location])
+  @@index([isOnline])
+  @@index([isPast])
+}
+
+model EventRegistration {
+  id          String   @id @default(uuid())
+  eventId     String
+  fullName    String
+  email       String
+  phone       String?
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([eventId])
+  @@index([email])
+  @@index([phone])
+  @@index([fullName])
+}
+
+model Inquiry {
+  id          String         @id @default(uuid())
+  name        String
+  email       String
+  phone       String?
+  subject     String?
+  message     String
+  status      InquiryStatus  @default(NEW)
+
+  createdById String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([email])
+  @@index([phone])
+  @@index([status])
+  @@index([name])
+  @@index([subject])
+}
+
+model Testimonial {
+  id          String   @id @default(uuid())
+  studentName String
+  country     String?
+  program     String?
+  university  String?
+  review      String
+  photoUrl    String?
+  rating      Int?
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([studentName])
+  @@index([country])
+  @@index([university])
+  @@index([rating])
+}
+
+model University {
+  id                String            @id @default(uuid())
+  name              String
+  country           UniversityCountry
+  city              String
+  logoUrl           String?
+  description       String?
+  worldRank         String?
+  majors            String[]
+  programs          String[]
+  tuitionFee        String?
+  hostelFee         String?
+  scholarshipType   String?
+  intake            String?
+  deadline          String?
+  documentsRequired String[]
+  website           String?
+  featured          Boolean           @default(false)
+
+  createdById       String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([name])
+  @@index([country])
+  @@index([city])
+  @@index([featured])
+}
+
+model VisaAppointment {
+  id            String                 @id @default(uuid())
+  fullName      String
+  email         String
+  phone         String
+  country       VisaCountry
+  visaType      String?
+  purpose       VisaPurpose?
+  preferredDate DateTime?
+  message       String?
+  status        VisaAppointmentStatus  @default(NEW)
+
+  createdById   String?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  @@index([email])
+  @@index([phone])
+  @@index([country])
+  @@index([purpose])
+  @@index([status])
+  @@index([fullName])
+}
+
+model User {
+  id                   String                 @id @default(uuid())
+  email                String                 @unique
+  fullName             String
+  role                 UserRole
+  password             String?
+  phone                String?
+  status               UserStatus             @default(ACTIVE)
+  createdById          String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  activeTokens         ActiveToken[]
+  resetPasswordRecords ResetPasswordRecord[]
+
+  @@index([fullName])
+  @@index([role])
+}
+
+model ActiveToken {
+  id         String   @id @default(uuid())
+  tokenId    String   @unique
+  tokenType  String
+  ipAddress  String?
+  deviceInfo Json?
+  expiresAt  DateTime
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([tokenId])
+}
+
+model ResetPasswordRecord {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}

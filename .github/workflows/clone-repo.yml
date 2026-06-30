@@ -18,6 +18,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
+      - name: Check SSH agent has key loaded
+        run: ssh-add -l
+
       - name: Clone or pull repository
         run: |
           ssh -o StrictHostKeyChecking=no "${{ secrets.USER }}@${{ secrets.HOST }}" << 'ENDSSH'

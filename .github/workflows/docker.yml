@@ -23,17 +23,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Create .env from .env.example
-        run: |
-          ssh -o StrictHostKeyChecking=no "${{ secrets.USER }}@${{ secrets.HOST }}" << 'ENDSSH'
-            set -euo pipefail
-
-            REPO_DIR='${{ secrets.REPO }}'
-            DEPLOY_PATH="$HOME/$REPO_DIR"
-
-            cp "$DEPLOY_PATH/server/.env.example" "$DEPLOY_PATH/server/.env"
-          ENDSSH
-
       - name: Deploy backend with Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no "${{ secrets.USER }}@${{ secrets.HOST }}" << 'ENDSSH'

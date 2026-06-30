@@ -9,24 +9,13 @@ import { blogFilterableFields } from './blog.const';
 import type {
   IBlogBulkUpdateItem,
   IBlogCreatePayload,
-  IBlogListQuery,
   IBlogUpdateManyPayload,
   IBlogUpdatePayload,
 } from './blog.interface';
 
 const listBlogs = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query as unknown as IBlogListQuery;
-  const filters = pick(query, blogFilterableFields) as Record<string, unknown>;
-
-  if (query.q && typeof query.q === 'string') {
-    try {
-      Object.assign(filters, JSON.parse(query.q));
-    } catch {
-      filters.searchTerm = query.q;
-    }
-  } else if (query.q && typeof query.q === 'object') {
-    Object.assign(filters, query.q);
-  }
+  const query = req.query;
+  const filters = pick(query, blogFilterableFields);
 
   const result = await BlogServices.listBlogs(filters, query);
 
@@ -40,7 +29,7 @@ const listBlogs = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getBlogById = catchAsync(async (req: Request, res: Response) => {
-  const result = await BlogServices.getBlogById(req.params.id as string);
+  const result = await BlogServices.getBlogById(req.params['id'] as string);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -51,10 +40,7 @@ const getBlogById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const createBlog = catchAsync(async (req: Request, res: Response) => {
-  const result = await BlogServices.createBlog(
-    req.body as IBlogCreatePayload,
-    req
-  );
+  const result = await BlogServices.createBlog(req.body as IBlogCreatePayload);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -79,7 +65,7 @@ const bulkCreateBlogs = catchAsync(async (req: Request, res: Response) => {
 
 const updateBlogById = catchAsync(async (req: Request, res: Response) => {
   const result = await BlogServices.updateBlogById(
-    req.params.id as string,
+    req.params['id'] as string,
     req.body as IBlogUpdatePayload
   );
 
@@ -118,7 +104,7 @@ const updateManyBlogs = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteBlogById = catchAsync(async (req: Request, res: Response) => {
-  const result = await BlogServices.deleteBlogById(req.params.id as string);
+  const result = await BlogServices.deleteBlogById(req.params['id'] as string);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -142,7 +128,7 @@ const deleteManyBlogs = catchAsync(async (req: Request, res: Response) => {
 });
 
 const restoreBlogById = catchAsync(async (req: Request) => {
-  await BlogServices.restoreBlogById(req.params.id as string);
+  await BlogServices.restoreBlogById(req.params['id'] as string);
 });
 
 export const BlogController = {

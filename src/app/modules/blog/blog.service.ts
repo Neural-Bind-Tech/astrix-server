@@ -24,7 +24,7 @@ const normalizeBlogPayload = <T extends Record<string, unknown>>(
 
   return {
     ...payload,
-    category: normalizeBlogCategory(payload.category),
+    category: normalizeBlogCategory(payload['category']),
   };
 };
 
@@ -123,7 +123,7 @@ const updateBlogById = async (id: string, payload: IBlogUpdatePayload) => {
       ...(payload.isFeatured !== undefined ? { isFeatured: payload.isFeatured } : {}),
       ...(payload.published !== undefined ? { published: payload.published } : {}),
       ...(payload.createdById ? { createdById: payload.createdById } : {}),
-    },
+    } as Prisma.BlogPostUncheckedUpdateInput,
   });
 };
 

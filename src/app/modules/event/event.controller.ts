@@ -8,25 +8,14 @@ import { eventFilterableFields } from './event.const';
 import type {
   IEventBulkUpdateItem,
   IEventCreatePayload,
-  IEventListQuery,
   IEventUpdateManyPayload,
   IEventUpdatePayload,
 } from './event.interface';
 import { EventServices } from './event.service';
 
 const listEvents = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query as unknown as IEventListQuery;
-  const filters = pick(query, eventFilterableFields) as Record<string, unknown>;
-
-  if (query.q && typeof query.q === 'string') {
-    try {
-      Object.assign(filters, JSON.parse(query.q));
-    } catch {
-      filters.searchTerm = query.q;
-    }
-  } else if (query.q && typeof query.q === 'object') {
-    Object.assign(filters, query.q);
-  }
+  const query = req.query;
+  const filters = pick(query, eventFilterableFields);
 
   const result = await EventServices.listEvents(filters, query);
 
@@ -40,7 +29,7 @@ const listEvents = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getEventById = catchAsync(async (req: Request, res: Response) => {
-  const result = await EventServices.getEventById(req.params.id as string);
+  const result = await EventServices.getEventById(req.params['id'] as string);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -78,7 +67,7 @@ const bulkCreateEvents = catchAsync(async (req: Request, res: Response) => {
 
 const updateEventById = catchAsync(async (req: Request, res: Response) => {
   const result = await EventServices.updateEventById(
-    req.params.id as string,
+    req.params['id'] as string,
     req.body as IEventUpdatePayload
   );
 
@@ -117,7 +106,9 @@ const updateManyEvents = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteEventById = catchAsync(async (req: Request, res: Response) => {
-  const result = await EventServices.deleteEventById(req.params.id as string);
+  const result = await EventServices.deleteEventById(
+    req.params['id'] as string
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -141,7 +132,7 @@ const deleteManyEvents = catchAsync(async (req: Request, res: Response) => {
 });
 
 const restoreEventById = catchAsync(async (req: Request) => {
-  await EventServices.restoreEventById(req.params.id as string);
+  await EventServices.restoreEventById(req.params['id'] as string);
 });
 
 export const EventController = {

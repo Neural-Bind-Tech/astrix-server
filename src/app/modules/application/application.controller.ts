@@ -9,27 +9,13 @@ import { applicationFilterableFields } from './application.const';
 import type {
   IApplicationBulkUpdateItem,
   IApplicationCreatePayload,
-  IApplicationListQuery,
   IApplicationUpdateManyPayload,
   IApplicationUpdatePayload,
 } from './application.interface';
 
 const listApplications = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query as unknown as IApplicationListQuery;
-  const filters = pick(query, applicationFilterableFields) as Record<
-    string,
-    unknown
-  >;
-
-  if (query.q && typeof query.q === 'string') {
-    try {
-      Object.assign(filters, JSON.parse(query.q));
-    } catch {
-      filters.searchTerm = query.q;
-    }
-  } else if (query.q && typeof query.q === 'object') {
-    Object.assign(filters, query.q);
-  }
+  const query = req.query;
+  const filters = pick(query, applicationFilterableFields);
 
   const result = await ApplicationServices.listApplications(filters, query);
 
@@ -44,7 +30,7 @@ const listApplications = catchAsync(async (req: Request, res: Response) => {
 
 const getApplicationById = catchAsync(async (req: Request, res: Response) => {
   const result = await ApplicationServices.getApplicationById(
-    req.params.id as string
+    req.params['id'] as string
   );
 
   sendResponse(res, {
@@ -57,8 +43,7 @@ const getApplicationById = catchAsync(async (req: Request, res: Response) => {
 
 const createApplication = catchAsync(async (req: Request, res: Response) => {
   const result = await ApplicationServices.createApplication(
-    req.body as IApplicationCreatePayload,
-    req
+    req.body as IApplicationCreatePayload
   );
 
   sendResponse(res, {
@@ -87,7 +72,7 @@ const bulkCreateApplications = catchAsync(
 const updateApplicationById = catchAsync(
   async (req: Request, res: Response) => {
     const result = await ApplicationServices.updateApplicationById(
-      req.params.id as string,
+      req.params['id'] as string,
       req.body as IApplicationUpdatePayload
     );
 
@@ -133,7 +118,7 @@ const updateManyApplications = catchAsync(
 const deleteApplicationById = catchAsync(
   async (req: Request, res: Response) => {
     const result = await ApplicationServices.deleteApplicationById(
-      req.params.id as string
+      req.params['id'] as string
     );
 
     sendResponse(res, {
@@ -161,7 +146,7 @@ const deleteManyApplications = catchAsync(
 );
 
 const restoreApplicationById = catchAsync(async (req: Request) => {
-  await ApplicationServices.restoreApplicationById(req.params.id as string);
+  await ApplicationServices.restoreApplicationById(req.params['id'] as string);
 });
 
 export const ApplicationController = {

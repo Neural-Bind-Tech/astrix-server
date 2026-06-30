@@ -1,8 +1,8 @@
-import type { Prisma } from '../../../generated/prisma/client';
+import type { BlogCategory, Prisma } from '../../../generated/prisma/client';
 import { blogSearchableFields } from './blog.const';
 import type { IBlogFilters } from './blog.interface';
 
-const blogCategoryMap: Record<string, Prisma.BlogCategory> = {
+const blogCategoryMap: Record<string, BlogCategory> = {
   'Study Abroad Guides': 'STUDY_ABROAD_GUIDES',
   STUDY_ABROAD_GUIDES: 'STUDY_ABROAD_GUIDES',
   'Visa Tips': 'VISA_TIPS',

@@ -14,4 +14,4 @@ RUN npm run build
 EXPOSE 5000
 
 # migrate at runtime, then start
-CMD ["sh", "-c", "npm run migrate && npm run start"]
+CMD ["sh", "-c", "npm run migrate && npm run dev"]

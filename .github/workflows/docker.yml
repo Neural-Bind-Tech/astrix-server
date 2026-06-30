@@ -32,6 +32,6 @@ jobs:
             DEPLOY_PATH="$HOME/$REPO_DIR"
             cd "$DEPLOY_PATH"
 
-            docker compose -f dockercompose.yml up -d --build --remove-orphans
-            docker compose -f dockercompose.yml ps
+            docker compose up -d --build --remove-orphans
+            docker compose ps
           ENDSSH

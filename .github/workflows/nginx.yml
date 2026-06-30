@@ -29,7 +29,7 @@ jobs:
             set -euo pipefail
 
             REPO_DIR='${{ secrets.REPO }}'
-            NGINX_TEMPLATE="$HOME/$REPO_DIR/server/nginx/app.conf"
+            NGINX_TEMPLATE="$HOME/$REPO_DIR/nginx/app.conf"
 
             if [ ! -f "$NGINX_TEMPLATE" ]; then
               echo "Nginx template not found: $NGINX_TEMPLATE"

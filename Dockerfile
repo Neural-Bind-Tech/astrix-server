@@ -6,7 +6,7 @@ COPY package.json ./
 RUN npm install
 
 COPY prisma ./prisma
-RUN npx prisma generate       
+RUN npx prisma generate
 
 COPY . .
 RUN npm run build
@@ -14,4 +14,4 @@ RUN npm run build
 EXPOSE 5000
 
 # migrate at runtime, then start
-CMD ["sh", "-c", "npm run migrate && npm run dev"]
+CMD ["sh", "-c", "npm run migrate && npm run seed && npm run dev"]

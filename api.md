@@ -8,12 +8,12 @@
 
 ### Query Parameters (List endpoints)
 
-| Param | Type | Description |
-|---|---|---|
-| `q` | JSON string | Filter object, e.g. `?q={"status":"NEW"}` |
-| `limit` | number (1–100) | Max records (default: 10) |
-| `skip` | number | Records to skip (default: 0) |
-| `sort_by` | string | Field to sort by. Prefix `-` for descending, e.g. `-createdAt` |
+| Param     | Type           | Description                                                    |
+| --------- | -------------- | -------------------------------------------------------------- |
+| `q`       | JSON string    | Filter object, e.g. `?q={"status":"NEW"}`                      |
+| `limit`   | number (1–100) | Max records (default: 10)                                      |
+| `skip`    | number         | Records to skip (default: 0)                                   |
+| `sort_by` | string         | Field to sort by. Prefix `-` for descending, e.g. `-createdAt` |
 
 ### Paginated Response Shape
 
@@ -37,33 +37,34 @@
 
 ## Route Summary
 
-| Module | Base Path |
-|---|---|
-| Auth | `/api/v1/auth` |
-| User | `/api/v1/user` |
-| Application | `/api/v1/application` |
-| Blog | `/api/v1/blog` |
-| Event | `/api/v1/event` |
+| Module            | Base Path                   |
+| ----------------- | --------------------------- |
+| Auth              | `/api/v1/auth`              |
+| User              | `/api/v1/user`              |
+| Application       | `/api/v1/application`       |
+| Blog              | `/api/v1/blog`              |
+| Event             | `/api/v1/event`             |
 | EventRegistration | `/api/v1/eventregistration` |
-| Inquiry | `/api/v1/inquiry` |
-| Testimonial | `/api/v1/testimonial` |
-| University | `/api/v1/university` |
-| VisaAppointment | `/api/v1/visaappointment` |
+| Inquiry           | `/api/v1/inquiry`           |
+| Testimonial       | `/api/v1/testimonial`       |
+| University        | `/api/v1/university`        |
+| VisaAppointment   | `/api/v1/visaappointment`   |
 
 ---
 
 ## Auth — `/api/v1/auth`
 
-| Method | Path | Description | Auth Required |
-|---|---|---|---|
-| POST | `/auth/login` | Login with email & password | ❌ |
-| POST | `/auth/forgot-password` | Send password reset link | ❌ |
-| POST | `/auth/reset-password` | Reset password with token | ❌ |
-| POST | `/auth/change-password` | Change own password | 🔒 ADMIN |
-| GET | `/auth/me` | Get current authenticated user | 🔒 ADMIN |
-| POST | `/auth/logout` | Logout current session | 🔒 ADMIN |
+| Method | Path                    | Description                    | Auth Required |
+| ------ | ----------------------- | ------------------------------ | ------------- |
+| POST   | `/auth/login`           | Login with email & password    | ❌            |
+| POST   | `/auth/forgot-password` | Send password reset link       | ❌            |
+| POST   | `/auth/reset-password`  | Reset password with token      | ❌            |
+| POST   | `/auth/change-password` | Change own password            | 🔒 ADMIN      |
+| GET    | `/auth/me`              | Get current authenticated user | 🔒 ADMIN      |
+| POST   | `/auth/logout`          | Logout current session         | 🔒 ADMIN      |
 
 **Login:**
+
 ```json
 POST /api/v1/auth/login
 {
@@ -76,17 +77,18 @@ POST /api/v1/auth/login
 
 ## User — `/api/v1/user`
 
-**Model fields:** `id`, `email` *(unique)*, `fullName`, `role` (`ADMIN` | `USER`), `createdById`, `createdAt`, `updatedAt`
+**Model fields:** `id`, `email` _(unique)_, `fullName`, `role` (`ADMIN` | `USER`), `createdById`, `createdAt`, `updatedAt`
 
-| Method | Path | Description |
-|---|---|---|
-| GET | `/user` | List users |
-| POST | `/user` | Create a user |
-| GET | `/user/:id` | Get user by ID |
-| PUT | `/user/:id` | Update user |
-| DELETE | `/user/:id` | Delete user |
+| Method | Path        | Description    |
+| ------ | ----------- | -------------- |
+| GET    | `/user`     | List users     |
+| POST   | `/user`     | Create a user  |
+| GET    | `/user/:id` | Get user by ID |
+| PUT    | `/user/:id` | Update user    |
+| DELETE | `/user/:id` | Delete user    |
 
 **Create:**
+
 ```json
 POST /api/v1/user
 {
@@ -97,6 +99,7 @@ POST /api/v1/user
 ```
 
 **Filter examples:**
+
 ```
 GET /api/v1/user?q={"role":"ADMIN"}&sort_by=-createdAt&limit=20
 ```
@@ -105,20 +108,21 @@ GET /api/v1/user?q={"role":"ADMIN"}&sort_by=-createdAt&limit=20
 
 ## Application — `/api/v1/application`
 
-| Method | Path | Description |
-|---|---|---|
-| GET | `/application` | List applications |
-| POST | `/application` | Create |
-| POST | `/application/bulk` | Bulk create |
-| PUT | `/application/bulk` | Bulk update |
-| PATCH | `/application/update-many` | Update many by filter |
-| DELETE | `/application` | Delete many by filter |
-| GET | `/application/:id` | Get by ID |
-| PUT | `/application/:id` | Update by ID |
-| DELETE | `/application/:id` | Delete by ID |
-| PUT | `/application/:id/restore` | Restore deleted record |
+| Method | Path                       | Description            |
+| ------ | -------------------------- | ---------------------- |
+| GET    | `/application`             | List applications      |
+| POST   | `/application`             | Create                 |
+| POST   | `/application/bulk`        | Bulk create            |
+| PUT    | `/application/bulk`        | Bulk update            |
+| PATCH  | `/application/update-many` | Update many by filter  |
+| DELETE | `/application`             | Delete many by filter  |
+| GET    | `/application/:id`         | Get by ID              |
+| PUT    | `/application/:id`         | Update by ID           |
+| DELETE | `/application/:id`         | Delete by ID           |
+| PUT    | `/application/:id/restore` | Restore deleted record |
 
 **Bulk create:**
+
 ```json
 POST /api/v1/application/bulk
 [
@@ -128,6 +132,7 @@ POST /api/v1/application/bulk
 ```
 
 **Update many:**
+
 ```json
 PATCH /api/v1/application/update-many
 {
@@ -137,6 +142,7 @@ PATCH /api/v1/application/update-many
 ```
 
 **Delete many:**
+
 ```json
 DELETE /api/v1/application
 { "status": "REJECTED" }
@@ -154,20 +160,21 @@ Same full pattern as Application (10 endpoints: list, create, bulk create, bulk 
 
 **Model fields:** `id`, `title`, `description`, `date`, `time`, `location`, `isOnline`, `imageUrl`, `registrationLink`, `isPast`, `createdById`, `createdAt`, `updatedAt`
 
-| Method | Path | Description |
-|---|---|---|
-| GET | `/event` | List events |
-| POST | `/event` | Create |
-| POST | `/event/bulk` | Bulk create |
-| PUT | `/event/bulk` | Bulk update |
-| PATCH | `/event/update-many` | Update many by filter |
-| DELETE | `/event` | Delete many by filter |
-| GET | `/event/:id` | Get by ID |
-| PUT | `/event/:id` | Update |
-| DELETE | `/event/:id` | Delete |
-| PUT | `/event/:id/restore` | Restore |
+| Method | Path                 | Description           |
+| ------ | -------------------- | --------------------- |
+| GET    | `/event`             | List events           |
+| POST   | `/event`             | Create                |
+| POST   | `/event/bulk`        | Bulk create           |
+| PUT    | `/event/bulk`        | Bulk update           |
+| PATCH  | `/event/update-many` | Update many by filter |
+| DELETE | `/event`             | Delete many by filter |
+| GET    | `/event/:id`         | Get by ID             |
+| PUT    | `/event/:id`         | Update                |
+| DELETE | `/event/:id`         | Delete                |
+| PUT    | `/event/:id/restore` | Restore               |
 
 **Create:**
+
 ```json
 POST /api/v1/event
 {
@@ -179,6 +186,7 @@ POST /api/v1/event
 ```
 
 **Filter:**
+
 ```
 GET /api/v1/event?q={"isOnline":"true"}&sort_by=-date
 ```
@@ -189,20 +197,21 @@ GET /api/v1/event?q={"isOnline":"true"}&sort_by=-date
 
 **Model fields:** `id`, `eventId`, `fullName`, `email`, `phone`, `createdById`, `createdAt`, `updatedAt`
 
-| Method | Path | Description |
-|---|---|---|
-| GET | `/eventregistration` | List registrations |
-| POST | `/eventregistration` | Create |
-| POST | `/eventregistration/bulk` | Bulk create |
-| PUT | `/eventregistration/bulk` | Bulk update |
-| PATCH | `/eventregistration/update-many` | Update many by filter |
-| DELETE | `/eventregistration` | Delete many by filter |
-| GET | `/eventregistration/:id` | Get by ID |
-| PUT | `/eventregistration/:id` | Update |
-| DELETE | `/eventregistration/:id` | Delete |
-| PUT | `/eventregistration/:id/restore` | Restore |
+| Method | Path                             | Description           |
+| ------ | -------------------------------- | --------------------- |
+| GET    | `/eventregistration`             | List registrations    |
+| POST   | `/eventregistration`             | Create                |
+| POST   | `/eventregistration/bulk`        | Bulk create           |
+| PUT    | `/eventregistration/bulk`        | Bulk update           |
+| PATCH  | `/eventregistration/update-many` | Update many by filter |
+| DELETE | `/eventregistration`             | Delete many by filter |
+| GET    | `/eventregistration/:id`         | Get by ID             |
+| PUT    | `/eventregistration/:id`         | Update                |
+| DELETE | `/eventregistration/:id`         | Delete                |
+| PUT    | `/eventregistration/:id/restore` | Restore               |
 
 **Create:**
+
 ```json
 POST /api/v1/eventregistration
 {
@@ -214,6 +223,7 @@ POST /api/v1/eventregistration
 ```
 
 **Filter by event:**
+
 ```
 GET /api/v1/eventregistration?q={"eventId":"uuid-of-event"}
 ```
@@ -224,20 +234,21 @@ GET /api/v1/eventregistration?q={"eventId":"uuid-of-event"}
 
 **Model fields:** `id`, `name`, `email`, `phone`, `subject`, `message`, `status` (`NEW` | `REPLIED` | `CLOSED`), `createdById`, `createdAt`, `updatedAt`
 
-| Method | Path | Description |
-|---|---|---|
-| GET | `/inquiry` | List inquiries |
-| POST | `/inquiry` | Create |
-| POST | `/inquiry/bulk` | Bulk create |
-| PUT | `/inquiry/bulk` | Bulk update |
-| PATCH | `/inquiry/update-many` | Update many by filter |
-| DELETE | `/inquiry` | Delete many by filter |
-| GET | `/inquiry/:id` | Get by ID |
-| PUT | `/inquiry/:id` | Update |
-| DELETE | `/inquiry/:id` | Delete |
-| PUT | `/inquiry/:id/restore` | Restore |
+| Method | Path                   | Description           |
+| ------ | ---------------------- | --------------------- |
+| GET    | `/inquiry`             | List inquiries        |
+| POST   | `/inquiry`             | Create                |
+| POST   | `/inquiry/bulk`        | Bulk create           |
+| PUT    | `/inquiry/bulk`        | Bulk update           |
+| PATCH  | `/inquiry/update-many` | Update many by filter |
+| DELETE | `/inquiry`             | Delete many by filter |
+| GET    | `/inquiry/:id`         | Get by ID             |
+| PUT    | `/inquiry/:id`         | Update                |
+| DELETE | `/inquiry/:id`         | Delete                |
+| PUT    | `/inquiry/:id/restore` | Restore               |
 
 **Create:**
+
 ```json
 POST /api/v1/inquiry
 {
@@ -248,12 +259,14 @@ POST /api/v1/inquiry
 ```
 
 **Update status:**
+
 ```json
 PUT /api/v1/inquiry/:id
 { "status": "REPLIED" }
 ```
 
 **Filter by status:**
+
 ```
 GET /api/v1/inquiry?q={"status":"NEW"}&sort_by=-createdAt
 ```
@@ -264,20 +277,21 @@ GET /api/v1/inquiry?q={"status":"NEW"}&sort_by=-createdAt
 
 **Model fields:** `id`, `studentName`, `country`, `program`, `university`, `review`, `photoUrl`, `rating` (int 1–5), `createdById`, `createdAt`, `updatedAt`
 
-| Method | Path | Description |
-|---|---|---|
-| GET | `/testimonial` | List testimonials |
-| POST | `/testimonial` | Create |
-| POST | `/testimonial/bulk` | Bulk create |
-| PUT | `/testimonial/bulk` | Bulk update |
-| PATCH | `/testimonial/update-many` | Update many by filter |
-| DELETE | `/testimonial` | Delete many by filter |
-| GET | `/testimonial/:id` | Get by ID |
-| PUT | `/testimonial/:id` | Update |
-| DELETE | `/testimonial/:id` | Delete |
-| PUT | `/testimonial/:id/restore` | Restore |
+| Method | Path                       | Description           |
+| ------ | -------------------------- | --------------------- |
+| GET    | `/testimonial`             | List testimonials     |
+| POST   | `/testimonial`             | Create                |
+| POST   | `/testimonial/bulk`        | Bulk create           |
+| PUT    | `/testimonial/bulk`        | Bulk update           |
+| PATCH  | `/testimonial/update-many` | Update many by filter |
+| DELETE | `/testimonial`             | Delete many by filter |
+| GET    | `/testimonial/:id`         | Get by ID             |
+| PUT    | `/testimonial/:id`         | Update                |
+| DELETE | `/testimonial/:id`         | Delete                |
+| PUT    | `/testimonial/:id/restore` | Restore               |
 
 **Create:**
+
 ```json
 POST /api/v1/testimonial
 {
@@ -297,20 +311,21 @@ POST /api/v1/testimonial
 
 **`country` enum values:** `USA` | `CHINA` | `MALAYSIA` | `SOUTH_KOREA` | `THAILAND` | `UK` | `CANADA` | `AUSTRALIA` | `OTHER`
 
-| Method | Path | Description |
-|---|---|---|
-| GET | `/university` | List universities |
-| POST | `/university` | Create |
-| POST | `/university/bulk` | Bulk create |
-| PUT | `/university/bulk` | Bulk update |
-| PATCH | `/university/update-many` | Update many by filter |
-| DELETE | `/university` | Delete many by filter |
-| GET | `/university/:id` | Get by ID |
-| PUT | `/university/:id` | Update |
-| DELETE | `/university/:id` | Delete |
-| PUT | `/university/:id/restore` | Restore |
+| Method | Path                      | Description           |
+| ------ | ------------------------- | --------------------- |
+| GET    | `/university`             | List universities     |
+| POST   | `/university`             | Create                |
+| POST   | `/university/bulk`        | Bulk create           |
+| PUT    | `/university/bulk`        | Bulk update           |
+| PATCH  | `/university/update-many` | Update many by filter |
+| DELETE | `/university`             | Delete many by filter |
+| GET    | `/university/:id`         | Get by ID             |
+| PUT    | `/university/:id`         | Update                |
+| DELETE | `/university/:id`         | Delete                |
+| PUT    | `/university/:id/restore` | Restore               |
 
 **Create:**
+
 ```json
 POST /api/v1/university
 {
@@ -326,6 +341,7 @@ POST /api/v1/university
 ```
 
 **Get featured universities:**
+
 ```
 GET /api/v1/university?q={"featured":"true"}&sort_by=worldRank
 ```
@@ -342,20 +358,21 @@ GET /api/v1/university?q={"featured":"true"}&sort_by=worldRank
 
 **`status` enum values:** `NEW` | `CONTACTED` | `SCHEDULED` | `COMPLETED`
 
-| Method | Path | Description |
-|---|---|---|
-| GET | `/visaappointment` | List appointments |
-| POST | `/visaappointment` | Create |
-| POST | `/visaappointment/bulk` | Bulk create |
-| PUT | `/visaappointment/bulk` | Bulk update |
-| PATCH | `/visaappointment/update-many` | Update many by filter |
-| DELETE | `/visaappointment` | Delete many by filter |
-| GET | `/visaappointment/:id` | Get by ID |
-| PUT | `/visaappointment/:id` | Update |
-| DELETE | `/visaappointment/:id` | Delete |
-| PUT | `/visaappointment/:id/restore` | Restore |
+| Method | Path                           | Description           |
+| ------ | ------------------------------ | --------------------- |
+| GET    | `/visaappointment`             | List appointments     |
+| POST   | `/visaappointment`             | Create                |
+| POST   | `/visaappointment/bulk`        | Bulk create           |
+| PUT    | `/visaappointment/bulk`        | Bulk update           |
+| PATCH  | `/visaappointment/update-many` | Update many by filter |
+| DELETE | `/visaappointment`             | Delete many by filter |
+| GET    | `/visaappointment/:id`         | Get by ID             |
+| PUT    | `/visaappointment/:id`         | Update                |
+| DELETE | `/visaappointment/:id`         | Delete                |
+| PUT    | `/visaappointment/:id/restore` | Restore               |
 
 **Book appointment:**
+
 ```json
 POST /api/v1/visaappointment
 {
@@ -370,6 +387,7 @@ POST /api/v1/visaappointment
 ```
 
 **Update status:**
+
 ```json
 PUT /api/v1/visaappointment/:id
 { "status": "SCHEDULED" }
@@ -380,7 +398,7 @@ PUT /api/v1/visaappointment/:id
 ## Frontend Fetch Helper (TypeScript)
 
 ```ts
-const BASE = 'http://localhost:5000/api/v1';
+const BASE = 'https://backend.astrixeducation.com/api/v1';
 
 async function api<T>(
   path: string,
@@ -419,7 +437,7 @@ await api(`/inquiry/${id}`, { method: 'DELETE' });
 await api('/testimonial/bulk', {
   method: 'POST',
   body: JSON.stringify([
-    { studentName: 'John', review: 'Great experience!', rating: 5 }
+    { studentName: 'John', review: 'Great experience!', rating: 5 },
   ]),
 });
 

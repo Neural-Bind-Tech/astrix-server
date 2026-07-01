@@ -7,11 +7,6 @@ async function main() {
   const SUPERADMINPHONE = (process.env.SUPERADMINPHONE || '22556688000').trim();
   const SUPERADMINPASSWORD = (process.env.SUPERADMINPASSWORD || 'ASD123!@#asd').trim();
 
-  console.log(SUPERADMINPASSWORD);
-  
-
-  console.log('Seeding super admin...');
-
   const existingAdmin = await prisma.user.findUnique({
     where: { email: SUPERADMINEMAIL },
   });
@@ -39,7 +34,6 @@ async function main() {
   }
 
   // Seed some universities
-  console.log('Seeding universities...');
   const countUniversities = await prisma.university.count();
   if (countUniversities === 0) {
     await prisma.university.createMany({

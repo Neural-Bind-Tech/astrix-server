@@ -1,20 +1,11 @@
 name: Configure Nginx on EC2
 
 on:
-  workflow_run:
-    workflows:
-      - Deploy Docker Compose to EC2
-    types:
-      - completed
-    branches:
-      - main
-      - master
   workflow_dispatch:
 
 jobs:
   configure-nginx:
     name: Configure Nginx
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:

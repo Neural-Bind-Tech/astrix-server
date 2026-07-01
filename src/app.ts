@@ -14,7 +14,7 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import routes from './app/routes';
 import { welcomeHtml } from './const/welcome';
 import logger from './helpers/logger';
-import client  from 'prom-client'
+import client from 'prom-client';
 import responseTime from 'response-time';
 
 const app: Application = express();
@@ -60,6 +60,7 @@ const allowedOrigins = process.env['ALLOWED_ORIGINS']?.split(',') ?? [
   'http://localhost:3001',
   'http://localhost:5173',
   'http://localhost:5174',
+  'https://astrixeducation.com/',
 ];
 
 const corsOptions = {
@@ -94,7 +95,7 @@ app.get('/', (_req: Request, res: Response) => {
   res.status(httpStatus.OK).type('html').send(welcomeHtml);
 });
 
-app.get('/metrics', async(_req: Request, res: Response) => {
+app.get('/metrics', async (_req: Request, res: Response) => {
   res.setHeader('Content-Type', client.register.contentType);
   const metrics = await client.register.metrics();
   res.send(metrics);
@@ -120,13 +121,19 @@ const totalRequests = new client.Counter({
   labelNames: ['method', 'route', 'status_code'],
 });
 
-app.use(responseTime((req: Request, res: Response, time: number) => {
-  const route = req.route ? req.route.path : 'unknown_route';
-  reqResTimeHistogram.labels(req.method, route, res.statusCode.toString()).observe(time/1000);
-  reqResTimeSummary.labels(req.method, route, res.statusCode.toString()).observe(time/1000);
-  totalRequests.labels(req.method, route, res.statusCode.toString()).inc();
-}));
- 
+app.use(
+  responseTime((req: Request, res: Response, time: number) => {
+    const route = req.route ? req.route.path : 'unknown_route';
+    reqResTimeHistogram
+      .labels(req.method, route, res.statusCode.toString())
+      .observe(time / 1000);
+    reqResTimeSummary
+      .labels(req.method, route, res.statusCode.toString())
+      .observe(time / 1000);
+    totalRequests.labels(req.method, route, res.statusCode.toString()).inc();
+  })
+);
+
 // Health check
 app.get('/health', async (_req: Request, res: Response) => {
   const dbHealth = await prisma.$queryRaw`SELECT 1`;

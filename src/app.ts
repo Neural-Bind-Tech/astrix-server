@@ -19,6 +19,9 @@ import responseTime from 'response-time';
 
 const app: Application = express();
 
+// Trust nginx reverse proxy
+app.set('trust proxy', 1);
+
 const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics({ register: client.register });
 
@@ -55,12 +58,13 @@ app.use((req: Request, res: Response, next) => {
 });
 
 // CORS
-const allowedOrigins = process.env['ALLOWED_ORIGINS']?.split(',') ?? [
+const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:5173',
   'http://localhost:5174',
-  'https://astrixeducation.com/',
+  'https://astrixeducation.com',
+  'https://www.astrixeducation.com',
 ];
 
 const corsOptions = {
